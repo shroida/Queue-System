@@ -58,6 +58,8 @@ class UI {
     String? password = stdin.readLineSync();
     if (username != null && password != null && name != null) {
       User newUser = User(name: name, username: username, password: password);
+      final file = File('users.json');
+      List<User> users = [];
     }
   }
 
