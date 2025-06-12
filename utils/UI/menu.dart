@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import '../../models/user.dart';
+
 class UI {
   static void showMenu() {
     print('==============================================');
@@ -47,6 +49,16 @@ class UI {
     print('==============================================');
     print('=============   Register New User  ===========');
     print('==============================================');
+
+    stdout.write('Enter your name:  ');
+    String? name = stdin.readLineSync();
+    stdout.write('Enter username:  ');
+    String? username = stdin.readLineSync();
+    stdout.write('Enter password:  ');
+    String? password = stdin.readLineSync();
+    if (username != null && password != null && name != null) {
+      User newUser = User(name: name, username: username, password: password);
+    }
   }
 
   static void showDepartments(List<String> departments) {
