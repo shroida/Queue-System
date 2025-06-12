@@ -54,7 +54,6 @@ class UI {
     }
   }
 
-
   static void showLoggedInMenu() {
     print('==============================================');
     print('============= Logged In Menu ================');
@@ -129,10 +128,28 @@ class UI {
     }
   }
 
-  static void showQueues(List<String> departments) {
+  static Future<void> showQueues(List<String> departments) async {
     print('\n=== Available Departments ===');
     for (int i = 0; i < departments.length; i++) {
       print('${i + 1}. ${departments[i]}');
+    }
+
+    stdout.write('Select a queue to join (or 0 to go back): ');
+    String? input = stdin.readLineSync();
+    int? choice = int.tryParse(input ?? '');
+
+    if (choice == null || choice == 0) {
+      clearTerminal();
+      showLoggedInMenu();
+      return;
+    }
+
+    if (choice >= 1 && choice <= departments.length) {
+      final selectedDept = departments[choice - 1];
+      await joinQueue(selectedDept);
+    } else {
+      print('Invalid choice. Please try again.');
+      showQueues(departments);
     }
   }
 
