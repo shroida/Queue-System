@@ -44,16 +44,46 @@ class UI {
 
     if (ifUserExist(username!, password!, File('data/users.json'))) {
       clearTerminal();
-      showDepartments([
-        'Passport Issuance',
-        'National ID Card Issuance',
-        'Birth Certificate Issuance',
-      ]);
+      print('Login successful!');
+      showLoggedInMenu();
     } else {
       clearTerminal();
       print('Wrong username or password');
       print('Please try again');
       showLoginForm();
+    }
+  }
+
+
+  static void showLoggedInMenu() {
+    print('==============================================');
+    print('============= Logged In Menu ================');
+    print('==============================================');
+    print('1. Queues 🚶‍♂️🚶‍♂️🚶‍♂️');
+    print('2. Queues Status');
+    print('3. Exit');
+    stdout.write('Choose an option: ');
+
+    String? input = stdin.readLineSync();
+    int? choice = int.tryParse(input ?? '');
+
+    switch (choice) {
+      case 1:
+        showQueues([
+          'Passport Issuance',
+          'National ID Card Issuance',
+          'Birth Certificate Issuance',
+        ]);
+        break;
+      case 2:
+        showQueueStatus();
+        break;
+      case 3:
+        print('Goodbye!');
+        exit(0);
+      default:
+        print('Invalid choice. Please try again.');
+        showLoggedInMenu();
     }
   }
 
@@ -91,15 +121,15 @@ class UI {
           jsonEncode(users.map((e) => e.toJson()).toList()),
           flush: true);
 
-      print('\n✅ User registered successfully!');
       clearTerminal();
+      print('\n✅ User registered successfully!');
       showLoginForm();
     } else {
       print('\n❌ Invalid input. Please try again.');
     }
   }
 
-  static void showDepartments(List<String> departments) {
+  static void showQueues(List<String> departments) {
     print('\n=== Available Departments ===');
     for (int i = 0; i < departments.length; i++) {
       print('${i + 1}. ${departments[i]}');
