@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import '../../models/user.dart';
@@ -45,21 +46,43 @@ class UI {
     print('==============================================');
   }
 
-  static void showRegistrationForm() {
+  static Future<void> showRegistrationForm() async {
     print('==============================================');
     print('=============   Register New User  ===========');
     print('==============================================');
 
     stdout.write('Enter your name:  ');
     String? name = stdin.readLineSync();
+
     stdout.write('Enter username:  ');
     String? username = stdin.readLineSync();
+
     stdout.write('Enter password:  ');
     String? password = stdin.readLineSync();
+
     if (username != null && password != null && name != null) {
       User newUser = User(name: name, username: username, password: password);
+
       final file = File('users.json');
       List<User> users = [];
+
+      if (await file.exists()) {
+        String contents = await file.readAsString();
+        if (contents.isNotEmpty) {
+          List<dynamic> jsonData = jsonDecode(contents);
+          users = jsonData.map((e) => User.fromJson(e)).toList();
+        }
+      }
+
+      users.add(newUser);
+
+      await file.writeAsString(
+          jsonEncode(users.map((e) => e.toJson()).toList()),
+          flush: true);
+
+      print('\n✅ User registered successfully!');
+    } else {
+      print('\n❌ Invalid input. Please try again.');
     }
   }
 
