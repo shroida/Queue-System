@@ -10,8 +10,7 @@ class UI {
     print('==============================================');
     print('1. Register New User');
     print('2. Login');
-    print('3. View Departments');
-    print('4. Exit');
+    print('3. Exit');
     stdout.write('Choose an option: ');
 
     String? input = stdin.readLineSync();
@@ -25,13 +24,6 @@ class UI {
         showLoginForm();
         break;
       case 3:
-        showDepartments([
-          'Passport Issuance',
-          'National ID Card Issuance',
-          'Birth Certificate Issuance',
-        ]);
-        break;
-      case 4:
         print('Goodbye!');
         exit(0);
       default:
@@ -44,6 +36,25 @@ class UI {
     print('==============================================');
     print('==================== Login ===================');
     print('==============================================');
+    stdout.write('Enter username:  ');
+    String? username = stdin.readLineSync();
+
+    stdout.write('Enter password:  ');
+    String? password = stdin.readLineSync();
+
+    if (ifUserExist(username!, password!, File('data/users.json'))) {
+      clearTerminal();
+      showDepartments([
+        'Passport Issuance',
+        'National ID Card Issuance',
+        'Birth Certificate Issuance',
+      ]);
+    } else {
+      clearTerminal();
+      print('Wrong username or password');
+      print('Please try again');
+      showLoginForm();
+    }
   }
 
   static Future<void> showRegistrationForm() async {
@@ -81,6 +92,8 @@ class UI {
           flush: true);
 
       print('\n✅ User registered successfully!');
+      clearTerminal();
+      showLoginForm();
     } else {
       print('\n❌ Invalid input. Please try again.');
     }
@@ -96,5 +109,32 @@ class UI {
   static void showQueueStatus() {
     print('\n=== Current Queue Status ===');
     // Queue display logic
+  }
+
+  static void clearTerminal() {
+    if (Platform.isWindows) {
+      // This works in most modern Windows terminals (e.g., Windows Terminal)
+      stdout.write('\x1B[2J\x1B[0;0H');
+    } else {
+      // Linux/macOS
+      stdout.write('\x1B[2J\x1B[H');
+    }
+  }
+
+  static bool ifUserExist(String username, String password, File fileJson) {
+    if (!fileJson.existsSync()) return false;
+
+    String contents = fileJson.readAsStringSync();
+    if (contents.isEmpty) return false;
+
+    List<dynamic> jsonData = jsonDecode(contents);
+
+    for (var user in jsonData) {
+      if (user['username'] == username && user['password'] == password) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
