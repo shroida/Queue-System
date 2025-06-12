@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
+import '../../models/queue_ticket .dart';
 import '../../models/user.dart';
 
 class UI {
@@ -200,6 +202,21 @@ class UI {
     stdin.readLineSync();
     clearTerminal();
     showLoggedInMenu();
+  }
+
+  static void printTicket(QueueTicket ticket, int usersBefore) {
+    clearTerminal();
+    print('==============================================');
+    print('=============== YOUR TICKET ==================');
+    print('==============================================');
+    print('Ticket ID: ${ticket.id}');
+    print('Department: ${ticket.department}');
+    print('Name: ${ticket.user.name}');
+    print('Date: ${ticket.timestamp}');
+    print('Position in queue: ${ticket.position}');
+    print('Users before you: $usersBefore');
+    print('Users after you: 0 (you are last in line)');
+    print('==============================================');
   }
 
   static void showQueueStatus() {
