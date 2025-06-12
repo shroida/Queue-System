@@ -4,6 +4,8 @@ import 'dart:io';
 import '../../models/user.dart';
 
 class UI {
+  User currentUser =
+      User(name: 'name', username: 'username', password: 'password');
   static void showMenu() {
     print('==============================================');
     print('=========== Government Queue System ==========');
@@ -33,6 +35,8 @@ class UI {
   }
 
   static void showLoginForm() {
+    final ui = UI(); 
+
     print('==============================================');
     print('==================== Login ===================');
     print('==============================================');
@@ -41,8 +45,9 @@ class UI {
 
     stdout.write('Enter password:  ');
     String? password = stdin.readLineSync();
-
-    if (ifUserExist(username!, password!, File('data/users.json'))) {
+    bool isExist =
+        ui.ifUserExist(username!, password!, File('data/users.json'));
+    if (isExist) {
       clearTerminal();
       print('Login successful!');
       showLoggedInMenu();
@@ -146,7 +151,7 @@ class UI {
 
     if (choice >= 1 && choice <= departments.length) {
       final selectedDept = departments[choice - 1];
-      await joinQueue(selectedDept);
+      // await joinQueue(selectedDept);
     } else {
       print('Invalid choice. Please try again.');
       showQueues(departments);
@@ -168,7 +173,7 @@ class UI {
     }
   }
 
-  static bool ifUserExist(String username, String password, File fileJson) {
+  bool ifUserExist(String username, String password, File fileJson) {
     if (!fileJson.existsSync()) return false;
 
     String contents = fileJson.readAsStringSync();
@@ -178,6 +183,8 @@ class UI {
 
     for (var user in jsonData) {
       if (user['username'] == username && user['password'] == password) {
+        currentUser =
+            User(name: user['name'], username: username, password: password);
         return true;
       }
     }
