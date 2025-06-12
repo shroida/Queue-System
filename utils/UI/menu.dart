@@ -63,7 +63,7 @@ class UI {
     if (username != null && password != null && name != null) {
       User newUser = User(name: name, username: username, password: password);
 
-      final file = File('users.json');
+      final file = File('data/users.json');
       List<User> users = [];
 
       if (await file.exists()) {
