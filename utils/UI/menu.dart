@@ -206,17 +206,21 @@ class UI {
 
   static void printTicket(QueueTicket ticket, int usersBefore) {
     clearTerminal();
-    print('==============================================');
-    print('=============== YOUR TICKET ==================');
-    print('==============================================');
-    print('Ticket ID: ${ticket.id}');
-    print('Department: ${ticket.department}');
-    print('Name: ${ticket.user.name}');
-    print('Date: ${ticket.timestamp}');
-    print('Position in queue: ${ticket.position}');
-    print('Users before you: $usersBefore');
-    print('Users after you: 0 (you are last in line)');
-    print('==============================================');
+    print('╔══════════════════════════════════════════════╗');
+    print('║               GOVERNMENT OFFICE              ║');
+    print('║               BIRTH CERTIFICATE              ║');
+    print('╠══════════════════════════════════════════════╣');
+    print('║                  YOUR TICKET                 ║');
+    print('╠══════════════════════════════════════════════╣');
+    print('║ Ticket ID          : ${ticket.id.toString().padRight(20)}║');
+    print('║ Department         : ${ticket.department.padRight(20)}║');
+    print('║ Name               : ${ticket.user.name.padRight(20)}║');
+    print(
+        '║ Date               : ${ticket.timestamp.toString().padRight(20)}║');
+    print('║ Position in queue  : ${ticket.position.toString().padRight(20)}║');
+    print('║ Users before you   : ${usersBefore.toString().padRight(20)}║');
+    print('║ Users after you    : 0 (you are last)        ║');
+    print('╚══════════════════════════════════════════════╝');
   }
 
   static void showQueueStatus() {
