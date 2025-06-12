@@ -35,7 +35,7 @@ class UI {
   }
 
   static void showLoginForm() {
-    final ui = UI(); 
+    final ui = UI();
 
     print('==============================================');
     print('==================== Login ===================');
@@ -134,6 +134,7 @@ class UI {
   }
 
   static Future<void> showQueues(List<String> departments) async {
+    final ui = UI();
     print('\n=== Available Departments ===');
     for (int i = 0; i < departments.length; i++) {
       print('${i + 1}. ${departments[i]}');
@@ -151,11 +152,54 @@ class UI {
 
     if (choice >= 1 && choice <= departments.length) {
       final selectedDept = departments[choice - 1];
-      // await joinQueue(selectedDept);
+      await ui.joinQueue(selectedDept);
     } else {
       print('Invalid choice. Please try again.');
       showQueues(departments);
     }
+  }
+
+  Future<void> joinQueue(String department) async {
+    final queueFile = File('data/queues.json');
+    List<QueueTicket> tickets = [];
+
+    if (await queueFile.exists()) {
+      final contents = await queueFile.readAsString();
+      if (contents.isNotEmpty) {
+        final jsonData = jsonDecode(contents) as List;
+        tickets = jsonData.map((e) => QueueTicket.fromJson(e)).toList();
+      }
+    }
+
+    final deptTickets =
+        tickets.where((t) => t.department == department).toList();
+    final position = deptTickets.length + 1;
+    final ticketId =
+        '${department.substring(0, 3)}-${Random().nextInt(9000) + 1000}';
+
+    // Create new ticket
+    final newTicket = QueueTicket(
+      id: ticketId,
+      department: department,
+      user: currentUser,
+      timestamp: DateTime.now(),
+      position: position,
+    );
+
+    // Add to queue and save
+    tickets.add(newTicket);
+    await queueFile.writeAsString(
+      jsonEncode(tickets.map((t) => t.toJson()).toList()),
+      flush: true,
+    );
+
+    // Print ticket
+    printTicket(newTicket, deptTickets.length);
+
+    print('\nPress any key to return to menu...');
+    stdin.readLineSync();
+    clearTerminal();
+    showLoggedInMenu();
   }
 
   static void showQueueStatus() {
