@@ -22,7 +22,11 @@ class UI {
         showLoginForm();
         break;
       case 3:
-        showDepartments(['Health', 'Education', 'Finance']);
+        showDepartments([
+          'Passport Issuance',
+          'National ID Card Issuance',
+          'Birth Certificate Issuance',
+        ]);
         break;
       case 4:
         print('Goodbye!');
@@ -34,11 +38,15 @@ class UI {
   }
 
   static void showLoginForm() {
-    print('\n=== Login ===');
+    print('==============================================');
+    print('==================== Login ===================');
+    print('==============================================');
   }
 
   static void showRegistrationForm() {
-    print('\n=== Register New User ===');
+    print('==============================================');
+    print('=============   Register New User  ===========');
+    print('==============================================');
   }
 
   static void showDepartments(List<String> departments) {
